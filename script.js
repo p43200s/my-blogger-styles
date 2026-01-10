@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     const html = `<ul>${Object.keys(tree).map(p => {
       const ks = Object.keys(tree[p].kids), has = ks.length > 0;
-      return `<li><div class="menu-item-row"><a href="${tree[p].url}">${esc(p)}</a>${has ? `<span class="toggle-btn">\u25B6</span>` : ''}</div>${has ? `<div class="submenu-content"><ul>${ks.map(c => `<li><a href="${tree[p].kids[c]}">${esc(c)}</a></li>`).join('')}</ul></div>` : ''}</li>`;
+      return `<li><div class="menu-item-row">${has ? `<span class="toggle-btn"></span>` : ''}<a href="${tree[p].url}">${esc(p)}</a></div>${has ? `<div class="submenu-content"><ul>${ks.map(c => `<li><span></span><a href="${tree[p].kids[c]}">${esc(c)}</a></li>`).join('')}</ul></div>` : ''}</li>`;
     }).join('')}</ul>`;
     menuWrap.innerHTML = (menuWrap.querySelector('h2')?.outerHTML || '') + html;
     menuWrap.onclick = (e) => { const b = e.target.closest('.toggle-btn'); if (b) { e.preventDefault(); b.closest('li').classList.toggle('is-open'); } };

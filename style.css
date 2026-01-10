@@ -1,47 +1,60 @@
+:root {
+  --def-bg: #222;
+  --def-text: #ddd;
+  --def-link: #0c0;
+  --def-link-hover: #3f3;
+  --def-btn-bg: #333;
+  --def-btn-bg-hover: #444;
+  --def-btn-border: 1px solid #555;
+  --def-text-shadow: 0 0 2px var(--def-text);
+  --def-link-shadow: 0 0 2px var(--def-link);
+  --def-shadow: 0 0 5px rgba(0, 0, 0, .3);
+  --def-box-bg: rgba(51, 255, 51, .1);
+  --def-box-bg-hover: rgba(51, 255, 51, .2);
+  --def-font: 'Courier New', 'Courier', 'Cascadia Code', monospace;
+}
+
 html {
   scroll-behavior: smooth;
 }
 
-/* 經典綠色終端機配色 */
-:root {
-  --color-background-dark: #0a0a0a;
-  --color-background-aside: #121212;
-  --color-text-light: #33ff33;
-  --color-link-light: #00cc00;
-  --color-link-light-hover: #ffffff;
-  --color-pre-background: #000000;
-  --color-pre-text: #33ff33;
-  --color-btn-dark: #000000;              
-  --color-btn-dark-hover: #004400;        
-  --border-btn-dark: 1px solid #33ff33;   
-  --shadow-box: 0 0 15px rgba(51, 255, 51, 0.3);
-  --dos-font-pixel: 'Pixelify Sans', sans-serif;
+*, *::before, *::after {
+  box-sizing: border-box;
 }
 
 body {
   margin: 0 auto;
   padding: 0;
-  background-color: var(--color-background-dark);
-  color: var(--color-text-light);
-  font-family: var(--dos-font-pixel);
+  background-color: var(--def-bg);
+  font-family: var(--def-font);
+  color: var(--def-text);
+  text-shadow: var(--def-text-shadow);
   display: flex;
-  justify-content: center; 
-  align-items: flex-start;
   max-width: 1600px;
-  text-shadow: 0 0 2px rgba(51, 255, 51, 0.5);
+  scrollbar-color: var(--def-link) var(--def-bg);
 }
 
-body::before {
+body::before,
+body::after {
+  pointer-events: none;
   content: " ";
   display: block;
   position: fixed;
   top: 0; left: 0; bottom: 0; right: 0;
-  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.2) 50%), 
+}
+
+body::before {
+  background: linear-gradient(rgba(64, 64, 64, .2) 50%, rgba(0, 0, 0, .2) 50%), 
               linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
   z-index: 9999;
   background-size: 100% 3px, 3px 100%;
-  pointer-events: none;
+  box-shadow: inset 0 0 50px rgb(0 0 0 / 25%);
   animation: screen-flicker 0.15s infinite;
+}
+
+body::after {
+  background: radial-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.4) 100%);
+  opacity: .25;
 }
 
 @keyframes screen-flicker {
@@ -52,18 +65,14 @@ body::before {
 }
 
 a {
-  color: var(--color-link-light);
+  color: var(--def-link);
   text-decoration: none;
+  text-shadow: var(--def-link-shadow);
 }
 
 a:hover {
-  color: var(--color-link-light-hover);
-}
-
-h1, h2 {
-  font-family: var(--dos-font-pixel);
-  font-weight: 700;
-  image-rendering: pixelated;
+  color: var(--def-link-hover);
+  text-shadow: var(--def-link-hover);
 }
 
 img {
@@ -71,32 +80,50 @@ img {
   height: auto;
 }
 
-*, *::before, *::after {
-  box-sizing: border-box;
-}
-
-.title, .parent-label-title, .post-title, .section-title, .toc-list, #Label1 ul {
-  margin: 0;
-  padding: 0;
-}
-
 /* --- 跳至主要內容 --- */
 .skip-link {
   position: absolute;
-  top: -40px;
-  left: 0;
-  z-index: 100;
-  transition: top 0.3s;
+  top: -100px;
+  left: 10px;
+  z-index: 9999;
+  background-color: #000;
+  color: #fff;
+  padding: 10px;
 }
 
 .skip-link:focus {
-  top: 0;
+  top: 10px;
 }
 
+/* --- 網站標題 --- */
+.header .title,
+.header .title a {
+  color: #fff;
+  text-shadow: 0 0 5px #fff;
+  text-transform: uppercase;
+}
+
+.header .title::after {
+  content: "_";
+  animation: blink-cursor 1s step-end infinite;
+}
+
+@keyframes blink-cursor {
+  from, to {
+    opacity: 1;
+    text-shadow: 0 0 5px #fff;
+  }
+  50% {
+    opacity: 0;
+    text-shadow: none;
+  }
+}
+
+/* --- 按鈕樣式 --- */
 button {
-  background: var(--color-btn-dark);
-  border: var(--border-btn-dark);
-  color: var(--color-text-light);
+  background: var(--def-btn-bg);
+  border: var(--def-btn-border);
+  color: var(--def-text);
   padding: 8px 16px;
   cursor: pointer;
   border-radius: 0;
@@ -104,18 +131,7 @@ button {
 }
 
 button:hover {
-  background: var(--color-btn-dark-hover);
-}
-
-.header .title::after {
-  content: "_";
-  color: var(--color-text-light);
-  animation: blink-cursor 1s step-end infinite;
-}
-
-@keyframes blink-cursor {
-  from, to { opacity: 1; text-shadow: 0 0 8px var(--color-text-light); }
-  50% { opacity: 0; text-shadow: none; }
+  background: var(--def-btn-bg-hover);
 }
 
 /* --- 側邊欄佈局 --- */
@@ -128,42 +144,7 @@ button:hover {
   flex-shrink: 0;
   overflow-y: auto;
   border: 1px solid var(--color-link-light);
-  background-color: var(--color-background-dark);
-}
-
-/* --- 捲軸整體樣式 --- */
-#menu-aside::-webkit-scrollbar, 
-#toc-aside::-webkit-scrollbar,
-body::-webkit-scrollbar {
-  width: 16px;
-  background-color: #000;
-}
-
-#menu-aside::-webkit-scrollbar-thumb, 
-#toc-aside::-webkit-scrollbar-thumb,
-body::-webkit-scrollbar-thumb {
-  background-color: var(--color-link-light);
-  border: 2px solid #000;
-  border-radius: 0;
-  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
-}
-
-#menu-aside::-webkit-scrollbar-thumb:hover, 
-#toc-aside::-webkit-scrollbar-thumb:hover,
-body::-webkit-scrollbar-thumb:hover {
-  background-color: var(--color-link-light-hover);
-}
-
-#menu-aside::-webkit-scrollbar-track, 
-#toc-aside::-webkit-scrollbar-track,
-body::-webkit-scrollbar-track {
-  background: repeating-linear-gradient( 45deg, #0a0a0a, #0a0a0a 2px, #121212 2px, #121212 4px );
-  border: 1px solid var(--color-link-light);
-}
-
-#menu-aside, #toc-aside, body {
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-link-light) #0a0a0a;
+  background-color: var(--def-bg);
 }
 
 /* --- 左側選單 垂直分佈 --- */
@@ -175,7 +156,7 @@ body::-webkit-scrollbar-track {
 /* --- 主內容 --- */
 #main-content {
   flex: 1;
-  padding: 20px;
+  padding: 0 10px 20px 10px;
   min-width: 600px;
   max-width: 900px;
 }
@@ -184,21 +165,14 @@ body::-webkit-scrollbar-track {
 .section-post-item {
   display: flex;
   align-items: center;
-  padding: 8px 0;
-  gap: 8px;
+  padding: 0 0 10px 20px;
+  gap: 6px;
   width: 100%;
-}
-
-.section-post-item::after {
-  border-top: 1px dashed var(--color-link-light);
 }
 
 /* 文章列表 - 標題 */
 .section-post-item a {
   order: 1;
-  flex-shrink: 1;
-  max-width: 75%;
-  text-decoration: none;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -209,84 +183,106 @@ body::-webkit-scrollbar-track {
   order: 2;
   content: "";
   flex-grow: 1;
-  border-top: 1px dotted #555;
-  height: 0;
+  border-top: 1px dotted #999;
   min-width: 20px;
-  align-self: center;
-  transform: translateY(2px);
 }
 
 /* 文章列表 - 日期 */
 .section-post-item span {
   order: 3;
   flex-shrink: 0;
-  color: #aaa;
-  font-size: 14px;
   font-family: monospace;
 }
 
 .section-footer {
-  margin-bottom: 10px;
   text-align: center;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(5px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* --- 收合式選單 --- */
+.Label ul {
+  padding: 0;
+  list-style: none;
+}
+
 .menu-item-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 5px 0;
 }
 
-/* --- 選單小箭頭 --- */
-.toggle-btn {
+/* --- 選單 --- */
+.Label .toggle-btn {
   cursor: pointer;
   padding: 5px 10px;
   transition: transform 0.3s ease;
   user-select: none;
 }
 
-/* --- 子選單容器 --- */
-#menu-aside .submenu-content {
+.Label .toggle-btn::after {
+  content: '[　]';
+}
+
+.Label .toggle-btn:hover:after {
+  content: '[Ｏ]';
+}
+
+.Label li.is-open > .menu-item-row .toggle-btn::after {
+  content: '[Ｘ]';
+}
+
+/* --- 子選單 --- */
+.Label .submenu-content {
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.3s cubic-bezier(0, 1, 0, 1);
 }
 
-/* --- 選單和目錄清單樣式 --- */
-#menu-aside li, 
-.toc-list li {
-  list-style: none;
-  padding-left: 20px;
+.Label .submenu-content li span::after {
+  content: '├─ ';
+}
+
+.Label .submenu-content li:last-child span::after {
+  content: '└─ ';
+}
+
+.Label .submenu-content li {
+  padding-left: 60px;
   padding-bottom: 10px;
 }
 
 /* --- 選單開啟時 --- */
 #menu-aside li.is-open > .submenu-content {
-  max-height: 2000px;
+  max-height: 100vh;
   transition: max-height 0.5s ease-in-out;
 }
 
-#menu-aside li.is-open > .menu-item-row .toggle-btn {
-  transform: rotate(90deg);
+/* --- 目錄 --- */
+.toc-h2-section ul,
+.toc-h3-section ul {
+  list-style: none;
+  padding: 0;
 }
 
-/* --- 目錄標題 --- */
-.toc-title {
-  margin: 20px 0;
-  font-size: large;
-  font-weight: bold;
+.toc-list li {
+  padding-left: 20px;
+  padding-bottom: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* --- 目前閱讀章節 --- */
 .toc-list a.active {
-  font-weight: bold;
-  color: var(--color-link-light-hover);
+  color: var(--def-text)
 }
 
 /* 文章導覽 */
@@ -313,103 +309,72 @@ body::-webkit-scrollbar-track {
   display: none;
 }
 
-/* --- 程式碼區塊 --- */
-pre {
-  background-color: var(--color-pre-background);
-  color: var(--color-pre-text);
-  padding: 15px;
-  margin: 0;
-  overflow-x: auto;
-  white-space: pre-wrap;
-  border: 1px solid var(--color-link-light);
-  position: relative;
-  padding: 30px 15px 15px 15px;
-  box-shadow: inset 0 0 10px rgba(51, 255, 51, 0.2);
-  border-radius: 0;
+pre, table, details {
+  background-color: var(--def-box-bg);
+  box-shadow: inset 0 0 10px var(--def-link);
+  border: 2px solid var(--def-link);
+  text-shadow: none;
+  margin: 20px 0;
+  padding: 20px;
 }
 
-pre::before {
-  content: "CODE";
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  background: var(--color-link-light);
-  color: #000;
-  font-weight: bold;
-  padding: 2px 10px;
+th, td, summary {
+  background-color: var(--def-box-bg);
+  text-shadow: none;
+}
+
+
+/* --- 程式碼區塊 --- */
+pre {
+  overflow-x: auto;
+  white-space: nowrap;
 }
 
 /* --- 表格 --- */
-.post-body table {
+table {
   width: 100%;
   border-collapse: collapse;
-  margin: 20px 0;
-  border: 2px solid var(--color-link-light);
-  font-family: var(--font-retro);
-  background-color: rgba(51, 255, 51, 0.05);
 }
 
-.post-body th {
-  background-color: var(--color-link-light);
-  color: var(--color-background-dark);
+th {
+  border-bottom: 2px solid var(--def-link);
   padding: 10px;
-  text-align: left;
-  border-bottom: 2px solid var(--color-link-light);
-  text-transform: uppercase;
+  text-align: center;
+  white-space: nowrap;
 }
 
-.post-body td {
-  padding: 8px 10px;
-  border: 1px solid rgba(51, 255, 51, 0.3);
-  color: var(--color-text-light);
+td {
+  padding: 10px;
+  border: 1px solid var(--def-link);
 }
 
-.post-body tr:hover td {
-  background-color: rgba(51, 255, 51, 0.15);
+tr:hover td {
+  background-color: var(--def-box-bg-hover);
 }
 
 /* --- 摺疊元件 --- */
-.post-body details {
-  border: 1px solid var(--color-link-light);
-  margin: 10px 0;
-  padding: 5px;
-  background-color: var(--color-background-dark);
-}
-
-.post-body summary {
+summary {
   cursor: pointer;
-  padding: 8px;
   list-style: none;
-  font-weight: bold;
-  color: var(--color-link-light);
-  outline: none;
-  display: flex;
-  align-items: center;
-}
-
-.post-body summary::before {
-  content: "[+]";
-  margin-right: 10px;
-  font-family: var(--font-retro);
-}
-
-.post-body details[open] summary::before {
-  content: "[-]";
-}
-
-.post-body summary:hover {
-  background-color: var(--color-btn-dark-hover);
-  color: var(--color-link-light-hover);
-}
-
-.post-body details div, 
-.post-body details p {
+  margin: -20px;
   padding: 10px;
-  border-top: 1px dashed var(--color-link-light);
-  margin: 0;
 }
 
-.theme {
-  text-align: center;
+summary::before {
+  content: "＋";
+  margin-right: 10px;
+}
+
+details[open] summary::before {
+  content: "－";
+}
+
+summary:hover {
+  background-color: var(--def-box-bg-hover);
+}
+
+details[open] summary {
+  margin: -20px -20px 0 -20px;
 }
 
 @media (max-width: 1200px) {
@@ -421,11 +386,10 @@ pre::before {
     top: 0;
     height: 100vh;
     width: 85vw;
-    background: var(--color-background-aside);
-    box-shadow: var(--shadow-box);
-    z-index: 1000;
+    box-shadow: var(--def-shadow);
+    z-index: 5000;
     overflow-y: auto;
-    padding: 20px;
+    padding: 0 20px;
     transition: transform 0.3s ease;
   }
 
@@ -461,6 +425,6 @@ pre::before {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    z-index: 2000;
+    z-index: 7500;
   }
 }
