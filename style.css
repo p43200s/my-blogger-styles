@@ -1,12 +1,15 @@
+/* --- Ver 0.01 --- */
+
 :root {
-  --def-bg: #222;
+  --def-bg: #111;
+  --def-main-content-bg: #222;
   --def-text: #ddd;
   --def-link: #0c0;
   --def-link-hover: #3f3;
   --def-btn-bg: #333;
   --def-btn-bg-hover: #444;
   --def-btn-border: 1px solid #555;
-  --def-text-shadow: 0 0 2px var(--def-text);
+  --def-text-shadow: 0 0 .5px var(--def-text);
   --def-link-shadow: 0 0 2px var(--def-link);
   --def-shadow: 0 0 5px rgba(0, 0, 0, .3);
   --def-box-bg: rgba(51, 255, 51, .1);
@@ -44,17 +47,16 @@ body::after {
 }
 
 body::before {
-  background: linear-gradient(rgba(64, 64, 64, .2) 50%, rgba(0, 0, 0, .2) 50%), 
-              linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
   z-index: 9999;
+  background: linear-gradient(rgba(64, 64, 64, .2) 50%, rgba(0, 0, 0, .2) 50%), 
+              linear-gradient(90deg, rgba(255, 0, 0, .03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
   background-size: 100% 3px, 3px 100%;
-  box-shadow: inset 0 0 50px rgb(0 0 0 / 25%);
+  box-shadow: inset 0 0 50px rgb(0, 0, 0, .25);
   animation: screen-flicker 0.15s infinite;
 }
 
 body::after {
-  background: radial-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.4) 100%);
-  opacity: .25;
+  background: radial-gradient(rgba(255, 255, 255, .1) 50%, rgba(0, 0, 0, .5) 150%);
 }
 
 @keyframes screen-flicker {
@@ -138,12 +140,11 @@ button:hover {
 #menu-aside, #toc-aside {
   position: sticky;
   top: 0;
-  padding: 10px;
+  padding: 0 20px;
   height: 100dvh;
   width: 300px;
   flex-shrink: 0;
   overflow-y: auto;
-  border: 1px solid var(--color-link-light);
   background-color: var(--def-bg);
 }
 
@@ -151,12 +152,18 @@ button:hover {
 #menu-aside {
   display: grid;
   grid-template-rows: auto 1fr auto;
+  border-right: 1px solid var(--def-link);
+}
+
+#toc-aside {
+  border-left: 1px solid var(--def-link);
 }
 
 /* --- 主內容 --- */
 #main-content {
+  background-color: var(--def-main-content-bg);
   flex: 1;
-  padding: 0 10px 20px 10px;
+  padding: 0 20px 60px 20px;
   min-width: 600px;
   max-width: 900px;
 }
@@ -327,7 +334,20 @@ th, td, summary {
 /* --- 程式碼區塊 --- */
 pre {
   overflow-x: auto;
-  white-space: nowrap;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-size: 1.2em;
+  position: relative;
+  padding-top: 36px;
+}
+
+pre::before {
+  content: "CODE";
+  font-size: .2em;
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  background: var(--def-box-bg);
+  padding: 4px 20px;
 }
 
 /* --- 表格 --- */
@@ -386,7 +406,6 @@ details[open] summary {
     top: 0;
     height: 100vh;
     width: 85vw;
-    box-shadow: var(--def-shadow);
     z-index: 5000;
     overflow-y: auto;
     padding: 0 20px;
