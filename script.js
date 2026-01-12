@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const menuWrap = $('#Label1');
   if (menuWrap) {
     const tree = {};
+    let openMenus = JSON.parse(sessionStorage.getItem('open-labels') || '[]');
     $$('ul li a', menuWrap).forEach(a => {
       const parts = a.textContent.trim().split(SEP).map(p => p.trim());
       const p = parts[0], c = parts[1];
@@ -15,10 +16,23 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     const html = `<ul>${Object.keys(tree).map(p => {
       const ks = Object.keys(tree[p].kids), has = ks.length > 0;
-      return `<li><div class="menu-item-row">${has ? `<span class="toggle-btn"></span>` : ''}<a href="${tree[p].url}">${esc(p)}</a></div>${has ? `<div class="submenu-content"><ul>${ks.map(c => `<li><span></span><a href="${tree[p].kids[c]}">${esc(c)}</a></li>`).join('')}</ul></div>` : ''}</li>`;
+      const isOpen = openMenus.includes(p) ? 'is-open' : '';
+      return `<li class="${isOpen}"><div class="menu-item-row">${has ? `<span class="toggle-btn"></span>` : ''}<a href="${tree[p].url}">${esc(p)}</a></div>${has ? `<ul class="submenu-content">${Object.keys(tree[p].kids).map(k => `<li><span></span><a href="${tree[p].kids[k]}">${esc(k)}</a></li>`).join('')}</ul>` : ''}</li>`;
     }).join('')}</ul>`;
-    menuWrap.innerHTML = (menuWrap.querySelector('h2')?.outerHTML || '') + html;
-    menuWrap.onclick = (e) => { const b = e.target.closest('.toggle-btn'); if (b) { e.preventDefault(); b.closest('li').classList.toggle('is-open'); } };
+    menuWrap.innerHTML = html;
+    menuWrap.onclick = (e) => {
+      const btn = e.target.closest('.toggle-btn');
+      if (!btn) return;
+      const li = btn.closest('li');
+      const labelName = li.querySelector('a').textContent;
+      const isOpen = li.classList.toggle('is-open');
+      if (isOpen) {
+        if (!openMenus.includes(labelName)) openMenus.push(labelName);
+      } else {
+        openMenus = openMenus.filter(name => name !== labelName);
+      }
+      sessionStorage.setItem('open-labels', JSON.stringify(openMenus));
+    };
   }
 
   // 2. 首頁分類
@@ -50,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const label = btn.dataset.label;
         const postsContainer = btn.closest('section').querySelector('.section-posts');
         const allPosts = catMap[label];
-        const html = allPosts.slice(MAX).map(e => `<div class="section-post-item" style="animation: fadeIn 0.4s ease forwards"><a href="${e.link.find(lk => lk.rel === 'alternate').href}">${esc(e.title.$t)}</a><span>${e.published.$t.slice(0, 10)}</span></div>`).join('');
+        const html = allPosts.slice(MAX).map(e => `<div class="section-post-item"><a href="${e.link.find(lk => lk.rel === 'alternate').href}">${esc(e.title.$t)}</a><span>${e.published.$t.slice(0, 10)}</span></div>`).join('');
         postsContainer.insertAdjacentHTML('beforeend', html);
         btn.remove();
       };
@@ -97,20 +111,35 @@ document.addEventListener('DOMContentLoaded', () => {
     if (h.startsWith('#h3-')) { const p = secs.findIndex(s => s.querySelector(h)); switchPage(p < 0 ? 0 : p, false, h); }
     else switchPage(h.startsWith('#section-') ? parseInt(h.split('-')[1]) : 0, false);
   }
-  
-  // 複製
-  $$('pre').forEach(block => {
-    block.addEventListener('click', () => {
-      const text = block.innerText.replace(/^CODE\n/, '');
-      navigator.clipboard.writeText(text).then(() => {
-        const originalBefore = getComputedStyle(block, '::before').content;
-        block.style.setProperty('--before-content', '"COPIED!"'); 
-        setTimeout(() => block.style.setProperty('--before-content', '"CODE"'), 1000);
-      });
-    });
-  });
 
-  // 4. 通用 UI
+    // 4. 複製按鈕
+  document.querySelectorAll('pre').forEach(block => {
+    const btn = document.createElement('button');
+    btn.className = 'copy-btn';
+    btn.innerText = 'COPY';
+    btn.onclick = () => {
+      const code = block.innerText.replace('COPY', '').trim();
+      navigator.clipboard.writeText(code).then(() => {
+        btn.innerText = 'DONE!';
+        setTimeout(() => btn.innerText = 'COPY', 1000);
+      });
+    };
+    block.appendChild(btn);
+    });
+  
+  // 5. Flicker 閃爍效果開關
+  const flickerBtn = $('#flicker-toggle');
+  if (flickerBtn) {
+    if (localStorage.getItem('flicker-off') === 'true') {
+      document.body.classList.add('no-flicker');
+    }
+    flickerBtn.onclick = () => {
+      const isOff = document.body.classList.toggle('no-flicker');
+      localStorage.setItem('flicker-off', isOff);
+    };
+  }
+
+  // 6. 通用 UI
   document.onclick = (e) => {
     [['#menu-aside', '#menu-toggle'], ['#toc-aside', '#toc-toggle']].forEach(([n, b]) => {
       const nav = $(n), btn = $(b);
