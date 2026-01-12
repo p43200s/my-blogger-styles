@@ -12,7 +12,7 @@
   --def-shadow: 0 0 5px rgba(0, 0, 0, .3);
   --def-box-bg: rgba(51, 255, 51, .1);
   --def-box-bg-hover: rgba(51, 255, 51, .2);
-  --def-font: 'Courier New', 'Courier', 'Cascadia Code', monospace;
+  --def-font: 'Courier New', 'Courier', 'Cascadia Code', 'monospace', 'sans-serif', 'serif';
 }
 
 html {
@@ -62,6 +62,12 @@ body::after {
   5% { opacity: 0.99; }
   10% { opacity: 0.96; }
   100% { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::before {
+	  animation: none;
+	  }
 }
 
 a {
@@ -235,15 +241,15 @@ button:hover {
 }
 
 .Label .toggle-btn::after {
-  content: '[　]';
+  content: '[\3000]'; /* [　] */
 }
 
 .Label .toggle-btn:hover:after {
-  content: '[Ｏ]';
+  content: '[\FF2F]'; /* [Ｏ] */
 }
 
 .Label li.is-open > .menu-item-row .toggle-btn::after {
-  content: '[Ｘ]';
+  content: '[\FF38]'; /* [Ｘ] */
 }
 
 /* --- 子選單 --- */
@@ -254,11 +260,11 @@ button:hover {
 }
 
 .Label .submenu-content li span::after {
-  content: '├─ ';
+  content: '\251C\2500\0020'; /* ├─ */
 }
 
 .Label .submenu-content li:last-child span::after {
-  content: '└─ ';
+  content: '\2514\2500\0020'; /* └─ */
 }
 
 .Label .submenu-content li {
@@ -380,12 +386,12 @@ summary {
 }
 
 summary::before {
-  content: "＋";
+  content: "\FF0B"; /* ＋ */
   margin-right: 10px;
 }
 
 details[open] summary::before {
-  content: "－";
+  content: "\FF0D"; /* － */
 }
 
 summary:hover {
