@@ -97,6 +97,18 @@ document.addEventListener('DOMContentLoaded', () => {
     if (h.startsWith('#h3-')) { const p = secs.findIndex(s => s.querySelector(h)); switchPage(p < 0 ? 0 : p, false, h); }
     else switchPage(h.startsWith('#section-') ? parseInt(h.split('-')[1]) : 0, false);
   }
+  
+  // 複製
+  $$('pre').forEach(block => {
+    block.addEventListener('click', () => {
+      const text = block.innerText.replace(/^CODE\n/, '');
+      navigator.clipboard.writeText(text).then(() => {
+        const originalBefore = getComputedStyle(block, '::before').content;
+        block.style.setProperty('--before-content', '"COPIED!"'); 
+        setTimeout(() => block.style.setProperty('--before-content', '"CODE"'), 1000);
+      });
+    });
+  });
 
   // 4. 通用 UI
   document.onclick = (e) => {
