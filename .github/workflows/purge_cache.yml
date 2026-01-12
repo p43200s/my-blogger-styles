@@ -1,0 +1,23 @@
+name: Purge jsDelivr Cache
+
+on:
+  push:
+    branches:
+      - main  # 或是你使用的主要分支名稱，例如 master
+    paths:
+      - 'style.css'
+      - 'script.js'
+
+jobs:
+  purge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Purge Cache
+        run: |
+          echo "正在刷新 style.css..."
+          curl -s https://purge.jsdelivr.net/gh/${{ github.repository }}@main/style.css
+          
+          echo -e "\n正在刷新 script.js..."
+          curl -s https://purge.jsdelivr.net/gh/${{ github.repository }}@main/script.js
+          
+          echo -e "\n快取刷新要求已發送！"
