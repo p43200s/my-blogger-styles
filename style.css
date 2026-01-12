@@ -1,5 +1,3 @@
-/* --- Ver 0.02 --- */
-
 :root {
   --def-bg: #111;
   --def-main-content-bg: #222;
@@ -166,6 +164,7 @@ button:hover {
   padding: 0 20px 60px 20px;
   min-width: 600px;
   max-width: 900px;
+  min-height: 100vh;
 }
 
 /* --- 文章列表 --- */
