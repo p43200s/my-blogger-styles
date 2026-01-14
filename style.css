@@ -1,4 +1,4 @@
-/* --- ver 1.01 --- */
+/* --- ver 1.02 小螢幕表格調整 --- */
 
 /* --- 預設配色 --- */
 :root {
@@ -21,9 +21,9 @@
   --def-btn-shadow: none;
 
   /* --- 框架配色 --- */
-  --def-box-bg: rgb(50, 255, 50, .1);
-  --def-box-bg-hover: rgb(50, 255, 50, .2);;
-  --def-box-shadow: inset 0 0 20px rgb(50, 255, 50, .5);;
+  --def-box-bg: rgb(50, 255, 50, .01);
+  --def-box-bg-hover: rgb(50, 255, 50, .05);;
+  --def-box-shadow: inset 0 0 20px rgb(50, 255, 50, .1);;
   --def-box-border-out: 2px solid var(--def-link);
   --def-box-border-in: 1px solid var(--def-link);
 }
@@ -158,7 +158,7 @@ button {
   border: var(--def-btn-border);
   color: var(--def-btn-text);
   box-shadow: var(--def-btn-shadow);
-  padding: 8px 16px;
+  padding: 8px;
   cursor: pointer;
   border-radius: 0;
   transition: 0.2s;
@@ -321,40 +321,40 @@ button:hover {
 
 /* --- 程式碼、表格、摺疊元件 --- */
 pre, table, details {
-  background-color: var(--def-box-bg);
+  background: var(--def-box-bg);
   box-shadow: var(--def-box-shadow);
   border: var(--def-box-border-out);
   text-shadow: none;
-  margin: 20px 0;
   padding: 20px;
 }
 th, td, summary {
-  background-color: var(--def-box-bg);
+  background: var(--def-box-bg);
   text-shadow: none;
 }
 
 /* --- 程式碼 --- */
 pre {
-  overflow-x: auto;
-  padding-top: 46px;
-  font-size: 1.2em;
-  white-space: pre-wrap;
-  word-wrap: break-word;
+  padding: 34px 0 0 0;
   position: relative;
 }
 pre::before {
-  content: " ";
-  font-size: .2em;
+  content: "CODE";
+  padding: 9px 20px;
   position: absolute;
   top: 0; left: 0; right: 0;
-  background: var(--def-box-bg);
-  padding: 8px 20px;
+  z-index: 4000;
 }
-pre .copy-btn {
+.copy-btn {
   position: absolute;
-  font-size: .2em;
-  top: 2px; right: 2px;
-  padding: 4px;
+  top: 0; right: 0;
+  z-index: 5000;
+}
+pre code {
+  display: block;
+  background: #111;
+  overflow-x: auto;
+  padding: 10px 15px;
+  white-space: pre;
 }
 
 /* --- 表格 --- */
@@ -377,6 +377,9 @@ tr:hover td {
 }
 
 /* --- 摺疊元件 --- */
+details {
+  margin: 10px 0;
+}
 summary {
   cursor: pointer;
   list-style: none;
@@ -437,5 +440,66 @@ details[open] summary {
   #main-content {
     min-width: 100%;
     max-width: 100%;
+  }
+
+  /* --- 卷軸式表格 --- */
+  .tscroll {
+    border: var(--def-box-border-out);
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 20px 0;
+  }
+  .tscroll table, 
+  .tscroll td {
+    border: none;
+  }
+  .tscroll tr {
+    border-bottom: var(--def-box-border-in);
+  }
+  .tscroll tr:last-child {
+    border-bottom: none;
+  }
+  .tscroll td {
+    border-right: var(--def-box-border-in);
+  }
+  .tscroll td:last-child {
+    border-right: none;
+  }
+  
+  /* --- 卡片式表格 --- */
+  .tcard table {
+    background: none;
+  }
+  .tcard tr,
+  .tcard thead, 
+  .tcard th, 
+  .tcard tbody, 
+  .tcard td {
+    display: block;
+  }
+  .tcard thead tr { /* 隱藏表頭 */
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+  .tcard tr {
+    border-bottom: 1px dotted var(--def-link-hover);
+  }
+  /* 最後一個移除底線 */
+  .tcard tr:last-child {
+    border-bottom: none;
+  }
+  .tcard td {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-gap: 10px;
+    border: none;
+    align-items: center;
+  }
+  .tcard td::before { /* 使用偽元素產生欄位名稱 */
+    content: attr(data-label);
+    color: var(--def-link);
+    font-weight: bold;
   }
 }

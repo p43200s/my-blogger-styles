@@ -1,9 +1,9 @@
-//<![CDATA[
+//ver 1.01 文章工具增加「表格自動 data-label」功能
 document.addEventListener('DOMContentLoaded', () => {
   const SEP = '-', MAX = 5, EXPIRY = 86400000; // 24小時快取
   const $ = (s, ctx = document) => ctx.querySelector(s), $$ = (s, ctx = document) => Array.from(ctx.querySelectorAll(s)), esc = (s) => String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 
-  // 1. 選單
+  // 選單
   const menuWrap = $('#Label1');
   if (menuWrap) {
     const tree = {};
@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
   }
 
-  // 2. 首頁分類
+  // 首頁分類
   const home = $('#home-sections');
   if (home) {
     const renderHome = (entries) => {
@@ -79,9 +79,24 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 3. 文章工具
+  // 文章工具
   const post = $('.post-body'), toc = $('#toc-container');
+    // 表格自動 data-label 開始
+    const autoTableLabel = (postContainer) => { 
+      $$('div.tcard', postContainer).forEach(table => {
+        const headers = $$('thead th', table).map(th => th.textContent.trim());
+        $$('tbody tr', table).forEach(tr => {
+          $$('td', tr).forEach((td, idx) => {
+            if (headers[idx] && !td.getAttribute('data-label')) {
+              td.setAttribute('data-label', headers[idx]);
+            }
+          });
+        });
+      });
+    };
+    // 表格自動 data-label 結束
   if (post) {
+    autoTableLabel(post); // 啟動「表格自動 data-label」功能
     const secs = [], go = (el) => el && window.scrollTo({ top: el.offsetTop - 80, behavior: 'smooth' });
     Array.from(post.childNodes).forEach(n => { if (!secs.length || n.nodeName === 'H2') secs.push(document.createElement('div')); secs[secs.length - 1].appendChild(n); });
     post.innerHTML = ''; 
@@ -112,7 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
     else switchPage(h.startsWith('#section-') ? parseInt(h.split('-')[1]) : 0, false);
   }
 
-    // 4. 複製按鈕
+    // 複製按鈕
   document.querySelectorAll('pre').forEach(block => {
     const btn = document.createElement('button');
     btn.className = 'copy-btn';
@@ -124,10 +139,10 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => btn.innerText = 'COPY', 1000);
       });
     };
-    block.appendChild(btn);
+    block.prepend(btn);
     });
   
-  // 5. Flicker 閃爍效果開關
+  // Flicker 閃爍效果開關
   const flickerBtn = $('#flicker-toggle');
   if (flickerBtn) {
     if (localStorage.getItem('flicker-off') === 'true') {
@@ -139,7 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
   }
 
-  // 6. 通用 UI
+  // 通用 UI
   document.onclick = (e) => {
     [['#menu-aside', '#menu-toggle'], ['#toc-aside', '#toc-toggle']].forEach(([n, b]) => {
       const nav = $(n), btn = $(b);
@@ -149,4 +164,3 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
 });
-//]]>
