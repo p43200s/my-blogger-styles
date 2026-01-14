@@ -1,4 +1,4 @@
-/* --- ver 1.02 小螢幕表格調整 --- */
+/* --- ver 1.03 修正選單省略號問題 --- */
 
 /* --- 預設配色 --- */
 :root {
@@ -242,8 +242,14 @@ button:hover {
 .toc-list li {
   padding-left: 20px;
   padding-bottom: 10px;
+}
+.toc-list li a {
+  display: block;
+  width: 100%;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  padding-right: 5px; 
 }
 .toc-list a.active { /* 目前閱讀章節 */
   color: var(--def-text);
