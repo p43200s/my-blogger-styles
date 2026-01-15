@@ -1,4 +1,4 @@
-/* --- ver 1.03 修正選單省略號問題 --- */
+/* --- ver 1.04 增加「降低動畫模式」並刪除多餘符號 --- */
 
 /* --- 預設配色 --- */
 :root {
@@ -8,37 +8,29 @@
   --def-text: #ddd;
   --def-text-shadow: 0 0 .5px var(--def-text);
   
-  /* --- 超連結配色 --- */
+  /* --- 超連結 --- */
   --def-link: #0c0;
   --def-link-shadow: 0 0 2px var(--def-link);
   --def-link-hover: #3f3;
 
-  /* --- 按鈕配色 --- */
+  /* --- 按鈕 --- */
   --def-btn-bg: #333;
   --def-btn-bg-hover: #444;
   --def-btn-text: var(--def-text);
   --def-btn-border: 1px solid #666;
   --def-btn-shadow: none;
 
-  /* --- 框架配色 --- */
+  /* --- 框架 --- */
   --def-box-bg: rgb(50, 255, 50, .01);
-  --def-box-bg-hover: rgb(50, 255, 50, .05);;
-  --def-box-shadow: inset 0 0 20px rgb(50, 255, 50, .1);;
+  --def-box-bg-hover: rgb(50, 255, 50, .05);
+  --def-box-shadow: inset 0 0 20px rgb(50, 255, 50, .1);
   --def-box-border-out: 2px solid var(--def-link);
   --def-box-border-in: 1px solid var(--def-link);
 }
 
-/* --- 平滑卷動 --- */
-html {
-  scroll-behavior: smooth;
-}
-
-/* --- 防止撐開框架 --- */
-*, *::before, *::after {
-  box-sizing: border-box;
-}
-
-/* --- 整體設定 --- */
+/* --- 全域設定 --- */
+html { scroll-behavior: smooth; }
+*, *::before, *::after { box-sizing: border-box; }
 body {
   margin: 0 auto;
   padding: 0;
@@ -48,13 +40,37 @@ body {
   text-shadow: var(--def-text-shadow);
   display: flex;
   max-width: 1600px;
-  /* --- 頁面內卷軸顏色 --- */
   scrollbar-color: var(--def-link) var(--def-bg);
 }
 
+/* --- 基礎元件 --- */
+svg { fill: var(--def-link); }
+img { max-width: 100%; height: auto;}
+a {
+  color: var(--def-link);
+  text-decoration: none;
+  text-shadow: var(--def-link-shadow);
+}
+a:hover {
+  color: var(--def-link-hover);
+  text-shadow: var(--def-link-hover);
+}
+button {
+  background: var(--def-btn-bg);
+  border: var(--def-btn-border);
+  color: var(--def-btn-text);
+  box-shadow: var(--def-btn-shadow);
+  padding: 8px;
+  cursor: pointer;
+  border-radius: 0;
+  transition: 0.2s;
+}
+button:hover {
+  background: var(--def-btn-bg-hover);
+}
+
 /* --- CRT 掃描線濾鏡 --- */
-body::before,
-body::after {
+body::before, body::after {
   pointer-events: none;
   content: " ";
   display: block;
@@ -63,14 +79,19 @@ body::after {
 }
 body::before {
   z-index: 9999;
-  background: linear-gradient(rgba(64, 64, 64, .2) 50%, rgba(0, 0, 0, .2) 50%), 
-              linear-gradient(90deg, rgba(255, 0, 0, .03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+  background: linear-gradient(rgba(64, 64, 64, .2) 50%, 
+                              rgba(0, 0, 0, .2) 50%), 
+              linear-gradient(90deg, 
+                              rgba(255, 0, 0, .03), 
+                              rgba(0, 255, 0, 0.01), 
+                              rgba(0, 0, 255, 0.03));
   background-size: 100% 3px, 3px 100%;
   box-shadow: inset 0 0 50px rgb(0, 0, 0, .25);
-  animation: screen-flicker 0.15s infinite;
+  animation: screen-flicker 0.2s infinite;
 }
 body::after {
-  background: radial-gradient(rgba(255, 255, 255, .1) 50%, rgba(0, 0, 0, .5) 150%);
+  background: radial-gradient(rgba(255, 255, 255, .1) 50%, 
+                              rgba(0, 0, 0, .5) 150%);
 }
 @keyframes screen-flicker {
   0% { opacity: 0.97; }
@@ -88,28 +109,6 @@ body.no-flicker #flicker-toggle svg {
   opacity: 0.5;
 }
 
-/* SVG 圖示 */
-svg {
-  fill: var(--def-link);
-}
-
-/* 超連結樣式 */
-a {
-  color: var(--def-link);
-  text-decoration: none;
-  text-shadow: var(--def-link-shadow);
-}
-a:hover {
-  color: var(--def-link-hover);
-  text-shadow: var(--def-link-hover);
-}
-
-/* 自適應圖片尺寸 */
-img {
-  max-width: 100%;
-  height: auto;
-}
-
 /* --- 跳至主要內容 --- */
 .skip-link {
   position: absolute;
@@ -125,8 +124,7 @@ img {
 }
 
 /* --- 標題 --- */
-.header .title,
-.header .title a {
+.header .title, .header .title a {
   color: #fff;
   text-shadow: 0 0 5px #fff;
   text-transform: uppercase;
@@ -135,37 +133,10 @@ img {
   content: "_";
   animation: blink-cursor 1s step-end infinite;
 }
-@keyframes blink-cursor {
-  from, to {
-    opacity: 1;
-    text-shadow: 0 0 5px #fff;
-  }
-  50% {
-    opacity: 0;
-    text-shadow: none;
-  }
-}
+@keyframes blink-cursor { 50% { opacity: 0; } }
 
 /* --- 頁尾 --- */
-footer {
-  margin-bottom: 20px;
-  text-align: center;
-}
-
-/* --- 按鈕 --- */
-button {
-  background: var(--def-btn-bg);
-  border: var(--def-btn-border);
-  color: var(--def-btn-text);
-  box-shadow: var(--def-btn-shadow);
-  padding: 8px;
-  cursor: pointer;
-  border-radius: 0;
-  transition: 0.2s;
-}
-button:hover {
-  background: var(--def-btn-bg-hover);
-}
+footer { margin-bottom: 20px; text-align: center; }
 
 /* --- 側欄佈局 --- */
 #menu-aside, #toc-aside {
@@ -234,22 +205,15 @@ button:hover {
 }
 
 /* --- 目錄 --- */
-.toc-h2-section ul,
-.toc-h3-section ul {
+.toc-h2-section ul, .toc-h3-section ul {
   list-style: none;
   padding: 0;
 }
 .toc-list li {
   padding-left: 20px;
   padding-bottom: 10px;
-}
-.toc-list li a {
-  display: block;
-  width: 100%;
-  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  padding-right: 5px; 
 }
 .toc-list a.active { /* 目前閱讀章節 */
   color: var(--def-text);
@@ -344,7 +308,7 @@ pre {
   position: relative;
 }
 pre::before {
-  content: "CODE";
+  content: attr(data-label);
   padding: 9px 20px;
   position: absolute;
   top: 0; left: 0; right: 0;
@@ -425,7 +389,8 @@ details[open] summary {
   #toc-aside {
     position: fixed;
     top: 0;
-    width: 85vw;
+    width: 280px;
+    max-width: 80%;
     z-index: 5000;
     transition: transform 0.3s ease;
   }
@@ -507,5 +472,12 @@ details[open] summary {
     content: attr(data-label);
     color: var(--def-link);
     font-weight: bold;
+  }
+}
+
+/* --- 降低動畫模式 --- */
+@media (prefers-reduced-motion: reduce) {
+  body::before {
+    animation: none !important;
   }
 }
